@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-cream-100 text-maroon-900 font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-maroon-700 px-4 py-2.5 text-sm font-medium text-cream-50 transition-all hover:bg-maroon-800 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-maroon-200 bg-white px-4 py-2.5 text-sm font-medium text-maroon-700 transition-all hover:bg-cream-100 active:scale-[0.98] disabled:opacity-60;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-maroon-600 transition-all hover:bg-maroon-50;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-red-700 active:scale-[0.98];
+  }
+  .input-field {
+    @apply w-full rounded-lg border border-maroon-200 bg-white px-3.5 py-2.5 text-sm text-maroon-900 placeholder:text-maroon-300 transition-colors focus:border-maroon-500 focus:outline-none focus:ring-2 focus:ring-maroon-500/20;
+  }
+  .label-field {
+    @apply mb-1.5 block text-sm font-medium text-maroon-800;
+  }
+  .card {
+    @apply rounded-xl border border-maroon-100 bg-white shadow-card;
+  }
+  .table-row-hover {
+    @apply transition-colors hover:bg-cream-50;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E9B6C0;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D98CA0;
+  background-clip: content-box;
+}
