@@ -18,6 +18,13 @@ import { api } from './client';
 //   faqs?: { question: string; answer: string }[];
 //   createdAt?: string;
 // }
+export interface Variant {
+  label: string;
+  price: number;
+  discountPrice?: number;
+  stock: number;
+  sku?: string;
+}
 export interface Product {
   _id: string;
   title: string;
@@ -34,6 +41,7 @@ export interface Product {
   shippingInfo?: string;
   productInformation?: string;
   faqs?: { question: string; answer: string }[];
+    variants?: Variant[];   // 👈 add
   createdAt?: string;
 }
 export interface ProductListResponse {

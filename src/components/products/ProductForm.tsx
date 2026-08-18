@@ -5,28 +5,16 @@ import { FaqEditor, type Faq } from './FaqEditor';
 import type { Product } from '@/api/products';
 import { useToast } from '@/context/ToastContext';
 import { getApiError } from '@/api/client';
+import { VariantEditor, type Variant } from './VariantEditor';
 
-// interface FormState {
-//   title: string;
-//   description: string;
-//   price: string;
-//   stock: string;
-//   category: string;
-//   status: 'active' | 'inactive';
-//   benefits: string;
-//   ingredients: string;
-//   howToUse: string;
-//   shippingInfo: string;
-//   productInfo: string;
-//   specifications: string;
-//   faqs: Faq[];
-// }
+
 
 interface FormState {
   title: string;
   description: string;
   price: string;
   stock: string;
+    slug: string; 
   category: string;
   isActive: boolean;              // 👈 status hataya
   benefits: string;
@@ -36,26 +24,15 @@ interface FormState {
   productInformation: string;     // 👈 naam sahi kiya
   specifications: string;         // 👈 ab plain string hai
   faqs: Faq[];
+  variants: Variant[];
+    existingImages: string[]; 
 }
 
-// const emptyForm: FormState = {
-//   title: '',
-//   description: '',
-//   price: '',
-//   stock: '',
-//   category: '',
-//   status: 'active',
-//   benefits: '',
-//   ingredients: '',
-//   howToUse: '',
-//   shippingInfo: '',
-//   productInfo: '',
-//   specifications: '',
-//   faqs: [],
-// };
+
 
 const emptyForm: FormState = {
   title: '',
+   slug: '',
   description: '',
   price: '',
   stock: '',
@@ -68,6 +45,8 @@ const emptyForm: FormState = {
   productInformation: '',
   specifications: '',
   faqs: [],
+  variants: [],
+    existingImages: [],
 };
 
 const listFromText = (t: string) =>
@@ -87,26 +66,9 @@ export function ProductForm({
   categories: string[];
 }) {
   const { toast } = useToast();
-  // const [form, setForm] = useState<FormState>(() =>
-  //   product
-  //     ? {
-  //         title: product.title ?? '',
-  //         description: product.description ?? '',
-  //         price: String(product.price ?? ''),
-  //         stock: String(product.stock ?? ''),
-  //         category: product.category ?? '',
-  //         status: product.status ?? 'active',
-  //         benefits: (product.benefits ?? []).join('\n'),
-  //         ingredients: (product.ingredients ?? []).join('\n'),
-  //         howToUse: (product.howToUse ?? []).join('\n'),
-  //         shippingInfo: product.shippingInfo ?? '',
-  //         productInfo: product.productInfo ?? '',
-  //         specifications: product.specifications ? JSON.stringify(product.specifications) : '',
-  //         faqs: product.faqs ?? [],
-  //       }
-  //     : emptyForm
-  // );
-  
+
+
+ 
 
 
   
@@ -114,6 +76,7 @@ export function ProductForm({
     product
       ? {
           title: product.title ?? '',
+             slug: product.slug ?? '',   
           description: product.description ?? '',
           price: String(product.price ?? ''),
           stock: String(product.stock ?? ''),
@@ -126,6 +89,8 @@ export function ProductForm({
           productInformation: product.productInformation ?? '',
           specifications: product.specifications ?? '', // 👈 JSON.stringify hataya
           faqs: product.faqs ?? [],
+          variants: product.variants ?? [], // 👈 add
+            existingImages: product.images ?? [], 
         }
       : emptyForm
 );
@@ -138,49 +103,15 @@ console.log("form", form)
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
 
-  // const handleSubmit = async (e: FormEvent) => {
-  //   e.preventDefault();
-  //   setSaving(true);
-  //   try {
-  //     let specifications: Record<string, string> | undefined;
-  //     if (form.specifications.trim()) {
-  //       try {
-  //         specifications = JSON.parse(form.specifications);
-  //       } catch {
-  //         toast('Specifications must be valid JSON', 'error');
-  //         setSaving(false);
-  //         return;
-  //       }
-  //     }
-  //     const payload: Partial<Product> = {
-  //       title: form.title,
-  //       description: form.description,
-  //       price: Number(form.price),
-  //       stock: Number(form.stock),
-  //       category: form.category,
-  //       status: form.status,
-  //       benefits: listFromText(form.benefits),
-  //       ingredients: listFromText(form.ingredients),
-  //       howToUse: listFromText(form.howToUse),
-  //       shippingInfo: form.shippingInfo,
-  //       productInfo: form.productInfo,
-  //       specifications,
-  //       faqs: form.faqs,
-  //     };
-  //     await onSave(payload, files);
-  //     onClose();
-  //   } catch (err) {
-  //     toast(getApiError(err, 'Failed to save product'), 'error');
-  //   } finally {
-  //     setSaving(false);
-  //   }
-  // };
+
+  
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSaving(true);
     try {
       const payload: Partial<Product> = {
         title: form.title,
+          slug: form.slug.trim() || undefined,
         description: form.description,
         price: Number(form.price),
         stock: Number(form.stock),
@@ -193,6 +124,8 @@ console.log("form", form)
         productInformation: form.productInformation,
         specifications: form.specifications, // 👈 direct string
         faqs: form.faqs,
+        variants: form.variants, 
+          existingImages: form.existingImages,
       };
       await onSave(payload, files);
       onClose();
@@ -215,6 +148,18 @@ console.log("form", form)
               className="input-field"
             />
           </div>
+
+          <div className="md:col-span-2">
+  <label className="label-field">
+    Slug <span className="text-xs text-maroon-400">(khali chodo to auto-generate hoga, aur update ke time apne aap change nahi hoga)</span>
+  </label>
+  <input
+    value={form.slug}
+    onChange={(e) => set('slug', e.target.value)}
+    placeholder="e.g. rose-face-cream"
+    className="input-field"
+  />
+</div>
           <div className="md:col-span-2">
             <label className="label-field">Description</label>
             <textarea
@@ -262,7 +207,7 @@ console.log("form", form)
               ))}
             </select>
           </div>
-          <div>
+          {/* <div>
             <label className="label-field">Status</label>
             <select
               value={form.status}
@@ -272,13 +217,29 @@ console.log("form", form)
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
-          </div>
+          </div> */}
+          <div>
+  <label className="label-field">Status</label>
+  <select
+    value={form.isActive ? 'active' : 'inactive'}
+    onChange={(e) => set('isActive', e.target.value === 'active')}
+    className="input-field"
+  >
+    <option value="active">Active</option>
+    <option value="inactive">Inactive</option>
+  </select>
+</div>
         </div>
 
         <ImageUploader
-          existingImages={product?.images ?? []}
-          onFilesChange={setFiles}
-          max={5}
+          // existingImages={product?.images ?? []}
+          // onFilesChange={setFiles}
+          // max={5}
+            key={product?._id ?? 'new'} 
+          existingImages={form.existingImages}
+  onFilesChange={setFiles}
+  onExistingImagesChange={(imgs) => set('existingImages', imgs)}
+  max={5}
         />
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -343,7 +304,10 @@ console.log("form", form)
           <label className="label-field">FAQs</label>
           <FaqEditor faqs={form.faqs} onChange={(faqs) => set('faqs', faqs)} />
         </div>
-
+            <div>
+  <label className="label-field">Variants</label>
+  <VariantEditor variants={form.variants} onChange={(variants) => set('variants', variants)} />
+</div>
         <div className="flex justify-end gap-3 border-t border-maroon-100 pt-4">
           <button type="button" onClick={onClose} className="btn-secondary">
             Cancel
