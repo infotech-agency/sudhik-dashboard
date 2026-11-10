@@ -15,7 +15,7 @@ const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/products', label: 'Products', icon: Package },
   { to: '/orders', label: 'Orders', icon: ShoppingCart },
-  { to: '/users', label: 'Users', icon: Users },
+  // { to: '/users', label: 'Users', icon: Users },
   { to: '/reviews', label: 'Reviews', icon: Star },
   { to: '/coupons', label: 'Coupons', icon: Ticket },
   { to: '/categories', label: 'Categories', icon: FolderTree },
@@ -82,6 +82,21 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
           <p className="mt-1 text-xs text-maroon-200/70">
             Sacred surface care
           </p>
+            <div className="mt-4 border-t border-maroon-700/40 pt-3">
+    <p className="text-[10px] text-cream-200/60">
+      Designed & Developed by
+    </p>
+
+    <a
+      href="https://infotechagency.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-yellow-400 transition-colors hover:text-yellow-300"
+    >
+      Infotech Agency
+      <span className="text-[10px]">↗</span>
+    </a>
+  </div>
         </div>
       </aside>
     </>

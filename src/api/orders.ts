@@ -55,8 +55,14 @@ export interface OrderListResponse {
 }
 
 export const ordersApi = {
-  list: async (query: OrderQuery = {}) =>
-    (await api.get<Order[] | OrderListResponse>('/orders', { params: query })).data?.data,
+  // list: async (query: OrderQuery = {}) =>
+  //   (await api.get<Order[] | OrderListResponse>('/orders', { params: query })).data?.data,
+  // list: async (query: OrderQuery = {}) =>
+  // (await api.get<Order[] | OrderListResponse>('/orders', { params: query })).data,
+  list: async (query: OrderQuery = {}) => {
+  const body = (await api.get('/orders', { params: query })).data;
+  return body?.data ?? body;
+},
   get: async (id: string) => (await api.get<Order>(`/orders/${id}`)).data?.data,
   updateStatus: async (id: string, status: OrderStatus) =>
     (await api.put<Order>(`/orders/${id}/status`, { orderStatus: status })).data?.data,
